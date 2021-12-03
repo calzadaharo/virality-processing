@@ -2,7 +2,7 @@ package staticVirality
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.functions._
 
-object VitalityRunner extends App {
+object ViralityRunner extends App {
   val spark : SparkSession = SparkSession.builder
     .appName("Data ingestion")
     .master("local[*]")
@@ -123,6 +123,7 @@ object VitalityRunner extends App {
   // EXECUTION SECTION
   //----------------------------------------------------------------------------------------------------
   //----------------------------------------------------------------------------------------------------
+
   val dataset = this.getData("src/main/scala/DepthFromOriginal_small/partition-0")
 
   // Virality
