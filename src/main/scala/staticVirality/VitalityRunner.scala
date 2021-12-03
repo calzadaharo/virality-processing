@@ -10,6 +10,12 @@ object VitalityRunner extends App {
 
   import spark.implicits._
 
+  //----------------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------
+  // INGESTION
+  //----------------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------
+
   /**
    * Creates the dataframe from the dataset provided
    *
@@ -23,6 +29,12 @@ object VitalityRunner extends App {
     transformated
   }
 
+  //----------------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------
+  // FILTERS
+  //----------------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------
+
   /**
    * Filter cascades by the content of the first post
    *
@@ -30,6 +42,12 @@ object VitalityRunner extends App {
   def filterFirstPost(dataset: DataFrame): DataFrame = {
     dataset.filter($"depth"===0).select("cascade","hateful")
   }
+
+  //----------------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------
+  // ALGORITHMS
+  //----------------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------
 
   /**
    * Generates the dataframe with original virality formula: The one that appears in Goel et all paper
@@ -50,7 +68,7 @@ object VitalityRunner extends App {
     val hated = filterFirstPost(dataset)
 
     // Generate the final dataset
-    val grouped = sumTerms.groupBy("cascade")
+    val grouped = sumTerms.groupBy("cascadeEXECUTION SECTION")
     var previous = grouped.agg(sum("explosion") as "totalSum")
     previous = previous.join(counting,"cascade")
     previous = previous.join(hated,"cascade")
@@ -108,7 +126,7 @@ object VitalityRunner extends App {
   val dataset = this.getData("src/main/scala/DepthFromOriginal_small/partition-0")
 
   // Virality
-//  viralityFormula(dataset)
+  viralityFormula(dataset)
 
   // Generations
   avgChildrenPerGen(dataset)
