@@ -8,7 +8,7 @@ object VitalityRunner extends App {
     .master("local[*]")
     .getOrCreate();
 
-  import spark.implicits._;
+  import spark.implicits._
 
   /**
    * Creates the dataframe from the dataset provided
@@ -24,23 +24,41 @@ object VitalityRunner extends App {
   }
 
   /**
+   * Filter cascades by the content of the first post
+   *
+   */
+  def filterFirstPost(dataset: DataFrame): DataFrame = {
+    dataset.filter($"depth"===0).select("cascade","hateful")
+  }
+
+  /**
    * Generates the dataframe with original virality formula: The one that appears in Goel et all paper
    *
    */
   def viralityFormula(dataset: DataFrame): Unit = {
-    var sumTerms = dataset.filter($"depth" === 0).withColumn("listed",
-      sequence(lit(0), col("depth")))
+    // First, a new column from 1 to depth is generated for each of the posts with depth!= 0. After that,
+    // content is expanded in different rows for the future summatory
+    var sumTerms = dataset.filter($"depth" !== 0).withColumn("listed",
+      sequence(lit(1), col("depth")))
     sumTerms=sumTerms.withColumn("explosion",explode(col("listed")))
 
-//    var sumTerms = dataset.withColumn("listed",
-//      sequence(lit(0), col("depth")))
-//    sumTerms=sumTerms.withColumn("explosion",explode(col("listed")))
-
+    // Count the number of posts per cascade
     val counting = dataset.groupBy("cascade").count
 
-    dataset.show()
-    sumTerms.show()
-    counting.show()
+    // Select the filter for the cascades
+    val hated = filterFirstPost(dataset)
+
+    // Generate the final dataset
+    val grouped = sumTerms.groupBy("cascade")
+    var previous = grouped.agg(sum("explosion") as "totalSum")
+    previous = previous.join(counting,"cascade")
+    previous = previous.join(hated,"cascade")
+
+    val viralityResult = previous.withColumn("virality",
+      (lit(1)/(col("count")*(col("count")-lit(1))))
+        *col("totalSum"))
+
+    viralityResult.show()
   }
 
   //----------------------------------------------------------------------------------------------------
