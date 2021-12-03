@@ -53,7 +53,7 @@ object ViralityRunner extends App {
    * Generates the dataframe with original virality formula: The one that appears in Goel et all paper
    *
    */
-  def viralityFormula(dataset: DataFrame): Unit = {
+  def viralityFormula(dataset: DataFrame): DataFrame = {
 
     // First, a new column from 1 to depth is generated for each of the posts with depth!= 0. After that,
     // content is expanded in different rows for the future summatory
@@ -68,7 +68,7 @@ object ViralityRunner extends App {
     val hated = filterFirstPost(dataset)
 
     // Generate the final dataset
-    val grouped = sumTerms.groupBy("cascadeEXECUTION SECTION")
+    val grouped = sumTerms.groupBy("cascade")
     var previous = grouped.agg(sum("explosion") as "totalSum")
     previous = previous.join(counting,"cascade")
     previous = previous.join(hated,"cascade")
@@ -77,14 +77,14 @@ object ViralityRunner extends App {
       (lit(1)/(col("count")*(col("count")-lit(1))))
         *col("totalSum"))
 
-    viralityResult.show()
+    viralityResult
   }
 
   /**
    * Effective Branching Number. Average number of children per generation
    *
    */
-    def avgChildrenPerGen(dataset: DataFrame): Unit = {
+    def avgChildrenPerGen(dataset: DataFrame): (DataFrame, DataFrame) = {
 
       // Select a filter for cascades
       val hated = filterFirstPost(dataset)
@@ -107,16 +107,28 @@ object ViralityRunner extends App {
         .withColumnRenamed("count","children")
 
       // Results
-      val hatefulResult = nonHatefulGenerations.join(nonHatefulPreBranching,"depth")
+      val hatefulResult = hatefulGenerations.join(hatefulPreBranching,"depth")
         .withColumn("EBN",col("children")/col("count")).orderBy("depth");
-      val nonHatefulResult = hatefulGenerations.join(hatefulPreBranching,"depth")
+      val nonHatefulResult = nonHatefulGenerations.join(nonHatefulPreBranching,"depth")
         .withColumn("EBN",col("children")/col("count")).orderBy("depth");
 
-      dataset.show()
-      hatefulResult.show()
-      nonHatefulResult.show()
+      (hatefulResult,nonHatefulResult)
     }
 
+  //----------------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------
+  // SAVE RESULTS SECTION
+  //----------------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------
+
+  def writeResults(dataFrame: DataFrame, path: String, format: String): Unit = format match {
+    case "json" =>
+      dataFrame.write.json(path)
+    case "csv" =>
+      dataFrame.write.csv(path)
+    case _ =>
+      println("INCORRECT FORMAT")
+  }
 
   //----------------------------------------------------------------------------------------------------
   //----------------------------------------------------------------------------------------------------
@@ -127,9 +139,13 @@ object ViralityRunner extends App {
   val dataset = this.getData("src/main/scala/DepthFromOriginal_small/partition-0")
 
   // Virality
-  viralityFormula(dataset)
+  val viralityResult = viralityFormula(dataset)
 
   // Generations
-  avgChildrenPerGen(dataset)
+  val hatefulResult = avgChildrenPerGen(dataset)._1
+  val nonHatefulResult = avgChildrenPerGen(dataset)._2
+
+  // Save results in a file
+  writeResults(nonHatefulResult,"/home/user/path","csv")
 }
 
