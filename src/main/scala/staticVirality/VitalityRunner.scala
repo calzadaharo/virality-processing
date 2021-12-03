@@ -36,6 +36,7 @@ object VitalityRunner extends App {
    *
    */
   def viralityFormula(dataset: DataFrame): Unit = {
+
     // First, a new column from 1 to depth is generated for each of the posts with depth!= 0. After that,
     // content is expanded in different rows for the future summatory
     var sumTerms = dataset.filter($"depth" !== 0).withColumn("listed",
@@ -61,6 +62,44 @@ object VitalityRunner extends App {
     viralityResult.show()
   }
 
+  /**
+   * Effective Branching Number. Average number of children per generation
+   *
+   */
+    def avgChildrenPerGen(dataset: DataFrame): Unit = {
+
+      // Select a filter for cascades
+      val hated = filterFirstPost(dataset)
+
+      // Change hate column by the results of the former filter
+      val hateApplied = dataset.drop("hateful").join(hated,"cascade")
+
+      // Group by depth for both hateful and non-hateful
+      val hatefulGenerations = hateApplied.filter($"hateful" === true)
+        .groupBy("depth").count
+      val nonHatefulGenerations = hateApplied.filter($"hateful" === false)
+        .groupBy("depth").count
+
+      // Prepare DataFrames for the formula
+      val hatefulPreBranching = hatefulGenerations.filter($"depth" !== 0)
+        .withColumn("depth",col("depth")-lit(1))
+        .withColumnRenamed("count","children")
+      val nonHatefulPreBranching = nonHatefulGenerations.filter($"depth" !== 0)
+        .withColumn("depth",col("depth")-lit(1))
+        .withColumnRenamed("count","children")
+
+      // Results
+      val hatefulResult = nonHatefulGenerations.join(nonHatefulPreBranching,"depth")
+        .withColumn("EBN",col("children")/col("count")).orderBy("depth");
+      val nonHatefulResult = hatefulGenerations.join(hatefulPreBranching,"depth")
+        .withColumn("EBN",col("children")/col("count")).orderBy("depth");
+
+      dataset.show()
+      hatefulResult.show()
+      nonHatefulResult.show()
+    }
+
+
   //----------------------------------------------------------------------------------------------------
   //----------------------------------------------------------------------------------------------------
   // EXECUTION SECTION
@@ -69,6 +108,9 @@ object VitalityRunner extends App {
   val dataset = this.getData("src/main/scala/DepthFromOriginal_small/partition-0")
 
   // Virality
-  viralityFormula(dataset)
+//  viralityFormula(dataset)
+
+  // Generations
+  avgChildrenPerGen(dataset)
 }
 
