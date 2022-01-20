@@ -146,6 +146,6 @@ object ViralityRunner extends App {
 //  val nonHatefulResult = avgChildrenPerGen(dataset)._2
 
   // Save results in a file
-  writeResults(viralityResult,"/home/rcalzada/output/virality_8_nt","csv")
+  writeResults(viralityResult,"/home/rcalzada/output/virality_8part_nt","csv")
 }
 
