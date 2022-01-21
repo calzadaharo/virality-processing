@@ -140,14 +140,14 @@ object ViralityRunner extends App {
   val dataset = this.getData("/home/rcalzada/DepthFromOriginal_1642673382044")
 
   // Virality
-//  val viralityResult = viralityFormula(dataset)
+  val viralityResult = viralityFormula(dataset)
 
   // Generations
   val hatefulResult = avgChildrenPerGen(dataset)._1
   val nonHatefulResult = avgChildrenPerGen(dataset)._2
 
   // Save results in a file
-//  writeResults(viralityResult,"/home/rcalzada/output/virality_8part_nt","csv")
+  writeResults(viralityResult,"/home/rcalzada/output/virality_8_nt","csv")
   writeResults(hatefulResult,
     "/home/rcalzada/output/generations_8part_nt/hateful","csv")
   writeResults(nonHatefulResult,
