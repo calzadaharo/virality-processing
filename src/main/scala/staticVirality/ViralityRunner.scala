@@ -22,9 +22,10 @@ object ViralityRunner extends App {
    */
   def getData(filename: String): DataFrame = {
     val df = spark.read.csv(filename)
-    val transformed = df.filter($"_c3" !== "null").filter($"_c4" !== "PROBLEM")
+    val transformed = df.filter($"_c2" !== "null").filter($"_c4" !== "PROBLEM")
       .select(col("_c1").as("id").cast("Long"),
-        col("_c2").as("cascade"),col("_c3").as("depth").cast("Int"),
+        col("_c2").as("cascade").cast("Long")
+        ,col("_c3").as("depth").cast("Int"),
         col("_c4").as("hateful"))
     transformed
   }
