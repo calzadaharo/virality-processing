@@ -149,8 +149,8 @@ object ViralityRunner extends App {
   // Save results in a file
   writeResults(viralityResult,"/home/rcalzada/output/virality_8_nt","csv")
   writeResults(hatefulResult,
-    "/home/rcalzada/output/generations_8part_nt/hateful","csv")
+    "/home/rcalzada/output/generations_8_nt/hateful","csv")
   writeResults(nonHatefulResult,
-    "/home/rcalzada/output/generations_8part_nt/non-hateful","csv")
+    "/home/rcalzada/output/generations_8_nt/non-hateful","csv")
 }
 
