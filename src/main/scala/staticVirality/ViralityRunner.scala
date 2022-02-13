@@ -30,6 +30,21 @@ object ViralityRunner extends App {
     transformed
   }
 
+  /**
+   * Creates the dataframe from the dataset provided
+   *
+   */
+  def getDynamicData(filename: String): DataFrame = {
+    val df = spark.read.csv(filename)
+    val transformed = df.filter($"_c3" !== "null")
+      .select(col("_c1").as("id").cast("Long"),
+        col("_c3").as("cascade").cast("Long"),
+        col("_c4").as("depth").cast("Int"),
+        col("_c5").as("timestamp").cast("Int"),
+        col("_c6").as("hateful"))
+    transformed
+  }
+
   //----------------------------------------------------------------------------------------------------
   //----------------------------------------------------------------------------------------------------
   // FILTERS
@@ -115,6 +130,17 @@ object ViralityRunner extends App {
 
       (hatefulResult,nonHatefulResult)
     }
+
+  //----------------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------
+  // DYNAMIC
+  //----------------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------
+
+  def incrementalWindowExecution(bounds: (Long,Long), increment: Long, dataset: DataFrame): Unit = {
+    val lowerBound = bounds._1
+    val higherBound = bounds._2
+  }
 
   //----------------------------------------------------------------------------------------------------
   //----------------------------------------------------------------------------------------------------
