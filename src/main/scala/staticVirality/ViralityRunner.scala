@@ -155,7 +155,7 @@ object ViralityRunner extends App {
 
     var a: Int = 0;
 
-    var viralityEvolution :DataFrame = cascadesFiltered.select("cascade")
+    var viralityEvolution: DataFrame = cascadesFiltered.select("cascade")
 
     for (i <- lowerBound to higherBound by increment) {
       a = i
@@ -199,20 +199,30 @@ object ViralityRunner extends App {
   //----------------------------------------------------------------------------------------------------
   //----------------------------------------------------------------------------------------------------
 
-  val dataset = this.getData("/home/rcalzada/DepthFromOriginal_1642673382044")
+  val dataset = this.getData(
+    "/home/rcalzada/static/DTfO/DepthTimestampFromOriginal_1644499864973")
 
   // Virality
-  val viralityResult = viralityFormula(dataset)
+
+//  val viralityResult = viralityFormula(dataset)
 
   // Generations
-  val hatefulResult = avgChildrenPerGen(dataset)._1
-  val nonHatefulResult = avgChildrenPerGen(dataset)._2
+
+//  val hatefulResult = avgChildrenPerGen(dataset)._1
+//  val nonHatefulResult = avgChildrenPerGen(dataset)._2
+
+  //Dynamic
+
+  val dynamicResult = incrementalWindowExecution((0,10),4,dataset)
 
   // Save results in a file
-  writeResults(viralityResult,"/home/rcalzada/output/virality_8_nt","csv")
-  writeResults(hatefulResult,
-    "/home/rcalzada/output/generations_8_nt/hateful","csv")
-  writeResults(nonHatefulResult,
-    "/home/rcalzada/output/generations_8_nt/non-hateful","csv")
+
+//  writeResults(viralityResult,"/home/rcalzada/output/virality_8_nt","csv")
+//  writeResults(hatefulResult,
+//    "/home/rcalzada/output/generations_8_nt/hateful","csv")
+//  writeResults(nonHatefulResult,
+//    "/home/rcalzada/output/generations_8_nt/non-hateful","csv")
+    writeResults(dynamicResult,
+      "/home/rcalzada/output/dynamicResults/virality_ev_0_10_4","csv")
 }
 
