@@ -199,10 +199,10 @@ object ViralityRunner extends App {
   //----------------------------------------------------------------------------------------------------
   //----------------------------------------------------------------------------------------------------
 
-//  val dataset = this.getDynamicData(
-//    "/home/rcalzada/static/DTfO/DepthTimestampFromOriginal_1644499864973")
-  val dataset = this.getData(
-    "/home/rcalzada/static/DepthFromOriginal_1642673382044")
+  val dataset = this.getDynamicData(
+    "/home/rcalzada/static/DTfO/DepthTimestampFromOriginal_1644499864973")
+//  val dataset = this.getData(
+//    "/home/rcalzada/static/DepthFromOriginal_1642673382044")
 
   // Virality
 
