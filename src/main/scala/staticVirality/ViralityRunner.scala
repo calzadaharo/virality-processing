@@ -141,7 +141,7 @@ object ViralityRunner extends App {
    * WARNING: WHAT HAPPENS WHEN A CASCADE ENDS?
    *
    */
-  def incrementalWindowExecution(bounds: (Int,Int), increment: Int, dataset: DataFrame): Unit = {
+  def incrementalWindowExecution(bounds: (Int,Int), increment: Int, dataset: DataFrame): DataFrame = {
     val lowerBound = bounds._1
     val higherBound = bounds._2
 
@@ -159,12 +159,23 @@ object ViralityRunner extends App {
 
     for (i <- lowerBound to higherBound by increment) {
       a = i
-      println("Hola: " + i )
+
+      val partition = filteredPosts.filter($"timestamp" <= i)
+      val result = viralityFormula(partition).
+        select("cascade", "virality").
+        withColumnRenamed("virality","virality_"+i)
+      viralityEvolution = viralityEvolution.join(result,"cascade")
     }
 
     if (a != higherBound) {
-      println("Hola: " + higherBound)
+      val partition = filteredPosts.filter($"timestamp" <= higherBound)
+      val result = viralityFormula(partition).
+        select("cascade", "virality").
+        withColumnRenamed("virality","virality_" + higherBound)
+      viralityEvolution = viralityEvolution.join(result,"cascade")
     }
+
+    viralityEvolution
   }
 
   //----------------------------------------------------------------------------------------------------
