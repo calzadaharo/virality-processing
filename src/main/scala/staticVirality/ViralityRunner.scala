@@ -99,7 +99,7 @@ object ViralityRunner extends App {
   /**
    * Effective Branching Number. Average number of children per generation
    *
-   */
+   */export SBT_OPTS="-Xmx10G -XX:MaxPermSize=10G -Xss1024M"
   def avgChildrenPerGen(dataset: DataFrame): (DataFrame, DataFrame) = {
 
     // Select a filter for cascades
@@ -199,7 +199,7 @@ object ViralityRunner extends App {
   //----------------------------------------------------------------------------------------------------
   //----------------------------------------------------------------------------------------------------
 
-  val dataset = this.getData(
+  val dataset = this.getDynamicData(
     "/home/rcalzada/static/DTfO/DepthTimestampFromOriginal_1644499864973")
 
   // Virality
