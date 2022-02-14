@@ -199,12 +199,14 @@ object ViralityRunner extends App {
   //----------------------------------------------------------------------------------------------------
   //----------------------------------------------------------------------------------------------------
 
-  val dataset = this.getDynamicData(
-    "/home/rcalzada/static/DTfO/DepthTimestampFromOriginal_1644499864973")
+//  val dataset = this.getDynamicData(
+//    "/home/rcalzada/static/DTfO/DepthTimestampFromOriginal_1644499864973")
+  val dataset = this.getData(
+    "/home/rcalzada/static/DepthFromOriginal_1642673382044")
 
   // Virality
 
-//  val viralityResult = viralityFormula(dataset)
+  val viralityResult = viralityFormula(dataset)
 
   // Generations
 
@@ -213,16 +215,16 @@ object ViralityRunner extends App {
 
   //Dynamic
 
-  val dynamicResult = incrementalWindowExecution((0,10),4,dataset)
+//  val dynamicResult = incrementalWindowExecution((0,10),4,dataset)
 
   // Save results in a file
 
-//  writeResults(viralityResult,"/home/rcalzada/output/virality_8_nt","csv")
+  writeResults(viralityResult,"/home/rcalzada/output/test","csv")
 //  writeResults(hatefulResult,
 //    "/home/rcalzada/output/generations_8_nt/hateful","csv")
 //  writeResults(nonHatefulResult,
 //    "/home/rcalzada/output/generations_8_nt/non-hateful","csv")
-    writeResults(dynamicResult,
-      "/home/rcalzada/output/dynamicResults/virality_ev_0_10_4","csv")
+//    writeResults(dynamicResult,
+//      "/home/rcalzada/output/dynamicResults/virality_ev_0_10_4","csv")
 }
 
