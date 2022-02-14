@@ -100,36 +100,36 @@ object ViralityRunner extends App {
    * Effective Branching Number. Average number of children per generation
    *
    */
-    def avgChildrenPerGen(dataset: DataFrame): (DataFrame, DataFrame) = {
+  def avgChildrenPerGen(dataset: DataFrame): (DataFrame, DataFrame) = {
 
-      // Select a filter for cascades
-      val hated = filterFirstPost(dataset)
+    // Select a filter for cascades
+    val hated = filterFirstPost(dataset)
 
-      // Change hate column by the results of the former filter
-      val hateApplied = dataset.drop("hateful").join(hated,"cascade")
+    // Change hate column by the results of the former filter
+    val hateApplied = dataset.drop("hateful").join(hated,"cascade")
 
-      // Group by depth for both hateful and non-hateful
-      val hatefulGenerations = hateApplied.filter($"hateful" === true)
-        .groupBy("depth").count
-      val nonHatefulGenerations = hateApplied.filter($"hateful" === false)
-        .groupBy("depth").count
+    // Group by depth for both hateful and non-hateful
+    val hatefulGenerations = hateApplied.filter($"hateful" === true)
+      .groupBy("depth").count
+    val nonHatefulGenerations = hateApplied.filter($"hateful" === false)
+      .groupBy("depth").count
 
-      // Prepare DataFrames for the formula
-      val hatefulPreBranching = hatefulGenerations.filter($"depth" !== 0)
-        .withColumn("depth",col("depth")-lit(1))
-        .withColumnRenamed("count","children")
-      val nonHatefulPreBranching = nonHatefulGenerations.filter($"depth" !== 0)
-        .withColumn("depth",col("depth")-lit(1))
-        .withColumnRenamed("count","children")
+    // Prepare DataFrames for the formula
+    val hatefulPreBranching = hatefulGenerations.filter($"depth" !== 0)
+      .withColumn("depth",col("depth")-lit(1))
+      .withColumnRenamed("count","children")
+    val nonHatefulPreBranching = nonHatefulGenerations.filter($"depth" !== 0)
+      .withColumn("depth",col("depth")-lit(1))
+      .withColumnRenamed("count","children")
 
-      // Results
-      val hatefulResult = hatefulGenerations.join(hatefulPreBranching,"depth")
-        .withColumn("EBN",col("children")/col("count")).orderBy("depth");
-      val nonHatefulResult = nonHatefulGenerations.join(nonHatefulPreBranching,"depth")
-        .withColumn("EBN",col("children")/col("count")).orderBy("depth");
+    // Results
+    val hatefulResult = hatefulGenerations.join(hatefulPreBranching,"depth")
+      .withColumn("EBN",col("children")/col("count")).orderBy("depth");
+    val nonHatefulResult = nonHatefulGenerations.join(nonHatefulPreBranching,"depth")
+      .withColumn("EBN",col("children")/col("count")).orderBy("depth");
 
-      (hatefulResult,nonHatefulResult)
-    }
+    (hatefulResult,nonHatefulResult)
+  }
 
   //----------------------------------------------------------------------------------------------------
   //----------------------------------------------------------------------------------------------------
@@ -137,9 +137,34 @@ object ViralityRunner extends App {
   //----------------------------------------------------------------------------------------------------
   //----------------------------------------------------------------------------------------------------
 
-  def incrementalWindowExecution(bounds: (Long,Long), increment: Long, dataset: DataFrame): Unit = {
+  /**
+   * WARNING: WHAT HAPPENS WHEN A CASCADE ENDS?
+   *
+   */
+  def incrementalWindowExecution(bounds: (Int,Int), increment: Int, dataset: DataFrame): Unit = {
     val lowerBound = bounds._1
     val higherBound = bounds._2
+
+    val cascadesTimestamp = dataset.groupBy("cascade").agg(
+      max("timestamp").as("duration"))
+
+    val cascadesFiltered = cascadesTimestamp
+      .filter($"duration" <= higherBound && $"duration" >= lowerBound)
+
+    val filteredPosts = dataset.join(cascadesFiltered,"cascade")
+
+    var a: Int = 0;
+
+    var viralityEvolution :DataFrame = cascadesFiltered.select("cascade")
+
+    for (i <- lowerBound to higherBound by increment) {
+      a = i
+      println("Hola: " + i )
+    }
+
+    if (a != higherBound) {
+      println("Hola: " + higherBound)
+    }
   }
 
   //----------------------------------------------------------------------------------------------------
