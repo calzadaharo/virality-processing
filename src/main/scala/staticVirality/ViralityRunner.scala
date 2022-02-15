@@ -170,6 +170,7 @@ object ViralityRunner extends App {
       val result = viralityFormula(partition).
         select("cascade", "virality").
         withColumnRenamed("virality","virality_"+i)
+      result.show
       viralityEvolution = viralityEvolution.join(result,"cascade")
     }
 
