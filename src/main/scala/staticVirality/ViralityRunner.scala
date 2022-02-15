@@ -93,12 +93,6 @@ object ViralityRunner extends App {
       (lit(1)/(col("count")*(col("count")-lit(1))))
         *col("totalSum"))
 
-    viralityResult.show()
-    println("PORRRRRRRR AQUÍ SÍ PASA SIN ROMPERSEEEEEEEEEEEEEEEEE")
-    println("--")
-    println("--")
-    println("PORRRRRRRR AQUÍ SÍ PASA SIN ROMPERSEEEEEEEEEEEEEEEEE")
-
     viralityResult
   }
 
