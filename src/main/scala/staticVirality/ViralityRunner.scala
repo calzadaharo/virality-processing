@@ -53,7 +53,7 @@ object ViralityRunner extends App {
 
   /**
    * Filter cascades by the content of the first post
-   *
+   * Returns: Cascade-hateful
    */
   def filterFirstPost(dataset: DataFrame): DataFrame = {
     dataset.filter($"depth"===0).select("cascade","hateful")
@@ -175,7 +175,7 @@ object ViralityRunner extends App {
       viralityEvolution = viralityEvolution.join(result,"cascade")
     }
 
-    val cascadeHate = dataset.select("cascade","hateful")
+    val cascadeHate = filterFirstPost(dataset)
 
     viralityEvolution = viralityEvolution.join(cascadeHate,"cascade")
 
