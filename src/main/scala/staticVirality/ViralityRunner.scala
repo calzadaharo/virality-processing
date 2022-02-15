@@ -176,6 +176,10 @@ object ViralityRunner extends App {
     }
 
     println(viralityEvolution)
+    println("PORRRRRRRR AQUÍ SÍ PASA SIN ROMPERSEEEEEEEEEEEEEEEEE")
+    println("--")
+    println("--")
+    println("PORRRRRRRR AQUÍ SÍ PASA SIN ROMPERSEEEEEEEEEEEEEEEEE")
     viralityEvolution
   }
 
