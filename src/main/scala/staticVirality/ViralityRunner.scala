@@ -182,7 +182,7 @@ object ViralityRunner extends App {
       viralityEvolution = viralityEvolution.join(result,"cascade")
     }
 
-//    viralityEvolution.show()
+    viralityEvolution.show()
 //    println("PORRRRRRRR AQUÍ SÍ PASA SIN ROMPERSEEEEEEEEEEEEEEEEE")
 //    println("--")
 //    println("--")
