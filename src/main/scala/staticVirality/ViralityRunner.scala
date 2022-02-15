@@ -93,6 +93,12 @@ object ViralityRunner extends App {
       (lit(1)/(col("count")*(col("count")-lit(1))))
         *col("totalSum"))
 
+    viralityResult.show()
+    println("PORRRRRRRR AQUÍ SÍ PASA SIN ROMPERSEEEEEEEEEEEEEEEEE")
+    println("--")
+    println("--")
+    println("PORRRRRRRR AQUÍ SÍ PASA SIN ROMPERSEEEEEEEEEEEEEEEEE")
+
     viralityResult
   }
 
@@ -211,7 +217,7 @@ object ViralityRunner extends App {
 
   // Virality
 
-//  val viralityResult = viralityFormula(dataset)
+  val viralityResult = viralityFormula(dataset)
 
   // Generations
 
@@ -220,16 +226,16 @@ object ViralityRunner extends App {
 
   //Dynamic
 
-  val dynamicResult = incrementalWindowExecution((0,4),4,dataset)
+//  val dynamicResult = incrementalWindowExecution((0,4),4,dataset)
 
   // Save results in a file
 
-//  writeResults(viralityResult,"/home/rcalzada/output/test","csv")
+  writeResults(viralityResult,"/home/rcalzada/output/test","csv")
 //  writeResults(hatefulResult,
 //    "/home/rcalzada/output/generations_8_nt/hateful","csv")
 //  writeResults(nonHatefulResult,
 //    "/home/rcalzada/output/generations_8_nt/non-hateful","csv")
-    writeResults(dynamicResult,
-      "/home/rcalzada/output/dynamicResults/virality_ev_0_10_4","csv")
+//    writeResults(dynamicResult,
+//      "/home/rcalzada/output/dynamicResults/virality_ev_0_10_4","csv")
 }
 
