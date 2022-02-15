@@ -175,6 +175,7 @@ object ViralityRunner extends App {
       viralityEvolution = viralityEvolution.join(result,"cascade")
     }
 
+    println(viralityEvolution)
     viralityEvolution
   }
 
