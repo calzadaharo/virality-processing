@@ -155,7 +155,7 @@ object ViralityRunner extends App {
 
     var a: Int = 0;
 
-    var viralityEvolution: DataFrame = cascadesFiltered.select("cascade","hateful")
+    var viralityEvolution: DataFrame = cascadesFiltered.select("cascade")
 
     for (i <- lowerBound to higherBound by increment) {
       a = i
@@ -174,6 +174,10 @@ object ViralityRunner extends App {
         withColumnRenamed("virality","virality_" + higherBound)
       viralityEvolution = viralityEvolution.join(result,"cascade")
     }
+
+    val cascadeHate = dataset.select("cascade","hateful")
+
+    viralityEvolution = viralityEvolution.join(cascadeHate,"cascade")
 
     viralityEvolution
   }
