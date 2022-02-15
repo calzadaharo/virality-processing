@@ -155,7 +155,7 @@ object ViralityRunner extends App {
 
     var a: Int = 0;
 
-    var viralityEvolution: DataFrame = cascadesFiltered.select("cascade")
+    var viralityEvolution: DataFrame = cascadesFiltered.select("cascade","hateful")
 
     for (i <- lowerBound to higherBound by increment) {
       a = i
