@@ -157,12 +157,6 @@ object ViralityRunner extends App {
 
     var viralityEvolution: DataFrame = cascadesFiltered.select("cascade")
 
-    viralityEvolution.show()
-    println("PORRRRRRRR AQUÍ SÍ PASA SIN ROMPERSEEEEEEEEEEEEEEEEE")
-    println("--")
-    println("--")
-    println("PORRRRRRRR AQUÍ SÍ PASA SIN ROMPERSEEEEEEEEEEEEEEEEE")
-
     for (i <- lowerBound to higherBound by increment) {
       a = i
 
@@ -170,7 +164,6 @@ object ViralityRunner extends App {
       val result = viralityFormula(partition).
         select("cascade", "virality").
         withColumnRenamed("virality","virality_"+i)
-      result.show
       viralityEvolution = viralityEvolution.join(result,"cascade")
     }
 
@@ -182,11 +175,6 @@ object ViralityRunner extends App {
       viralityEvolution = viralityEvolution.join(result,"cascade")
     }
 
-    viralityEvolution.show()
-//    println("PORRRRRRRR AQUÍ SÍ PASA SIN ROMPERSEEEEEEEEEEEEEEEEE")
-//    println("--")
-//    println("--")
-//    println("PORRRRRRRR AQUÍ SÍ PASA SIN ROMPERSEEEEEEEEEEEEEEEEE")
     viralityEvolution
   }
 
@@ -227,7 +215,7 @@ object ViralityRunner extends App {
 
   //Dynamic
 
-  val dynamicResult = incrementalWindowExecution((1,4),4,dataset)
+  val dynamicResult = incrementalWindowExecution((2,10),4,dataset)
 
   // Save results in a file
 
@@ -236,7 +224,7 @@ object ViralityRunner extends App {
 //    "/home/rcalzada/output/generations_8_nt/hateful","csv")
 //  writeResults(nonHatefulResult,
 //    "/home/rcalzada/output/generations_8_nt/non-hateful","csv")
-//    writeResults(dynamicResult,
-//      "/home/rcalzada/output/dynamicResults/virality_ev_0_10_4","csv")
+    writeResults(dynamicResult,
+      "/home/rcalzada/output/dynamicResults/virality_ev_0_10_4","csv")
 }
 
