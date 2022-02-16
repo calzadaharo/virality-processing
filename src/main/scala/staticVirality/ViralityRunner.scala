@@ -148,14 +148,16 @@ object ViralityRunner extends App {
     val cascadesTimestamp = dataset.groupBy("cascade").agg(
       max("timestamp").as("duration"))
 
-    var cascadesFiltered = cascadesTimestamp
+    val cascadesFiltered = cascadesTimestamp
       .filter($"duration" <= highestBound && $"duration" >= lowestBound)
 
     val filteredPosts = dataset.join(cascadesFiltered,"cascade")
 
     var a: Int = 0;
 
-    var viralityEvolution: DataFrame = cascadesFiltered.select("cascade")
+    var viralityEvolution: DataFrame = cascadesFiltered.
+      withColumn("size",col("duration")+lit(1)).
+      select("cascade","size")
 
     for (i <- lowestBound to highestBound by increment) {
       a = i
@@ -164,7 +166,7 @@ object ViralityRunner extends App {
       val result = viralityFormula(partition).
         select("cascade", "virality").
         withColumnRenamed("virality","virality_"+i)
-      cascadesFiltered = cascadesFiltered.join(result,"cascade")
+      viralityEvolution = viralityEvolution.join(result,"cascade")
     }
 
     if (a != highestBound) {
@@ -172,14 +174,14 @@ object ViralityRunner extends App {
       val result = viralityFormula(partition).
         select("cascade", "virality").
         withColumnRenamed("virality","virality_" + highestBound)
-      cascadesFiltered = cascadesFiltered.join(result,"cascade")
+      viralityEvolution = viralityEvolution.join(result,"cascade")
     }
 
     val cascadeHate = filterFirstPost(dataset)
 
-    cascadesFiltered = cascadesFiltered.join(cascadeHate,"cascade")
+    viralityEvolution = viralityEvolution.join(cascadeHate,"cascade")
 
-    cascadesFiltered
+    viralityEvolution
   }
 
   //----------------------------------------------------------------------------------------------------
@@ -219,7 +221,7 @@ object ViralityRunner extends App {
 
   //Dynamic
 
-  val dynamicResult = incrementalWindowExecution((2,2692),1,dataset)
+  val dynamicResult = incrementalWindowExecution((2,10),4,dataset)
 
   // Save results in a file
 
@@ -229,6 +231,6 @@ object ViralityRunner extends App {
 //  writeResults(nonHatefulResult,
 //    "/home/rcalzada/output/generations_8_nt/non-hateful","csv")
     writeResults(dynamicResult,
-      "/home/rcalzada/output/dynamicResults/duration","csv")
+      "/home/rcalzada/output/dynamicResults/durationn","csv")
 }
 
