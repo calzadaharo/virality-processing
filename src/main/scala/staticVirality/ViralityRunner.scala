@@ -160,7 +160,7 @@ object ViralityRunner extends App {
       select("cascade","size")
 
 //    for (i <- lowestBound to highestBound by increment) {
-    for (i <- lowestBound to 10 by increment) {
+    for (i <- lowestBound to 4 by increment) {
       a = i
 
       val partition = filteredPosts.filter($"timestamp" <= i)
@@ -233,6 +233,6 @@ object ViralityRunner extends App {
 //  writeResults(nonHatefulResult,
 //    "/home/rcalzada/output/generations_8_nt/non-hateful","csv")
     writeResults(dynamicResult,
-      "/home/rcalzada/output/dynamicResults/whole_until_10_inc_1","csv")
+      "/home/rcalzada/output/dynamicResults/whole_until_4_inc_1","csv")
 }
 
