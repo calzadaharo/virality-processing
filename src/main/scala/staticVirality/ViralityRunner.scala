@@ -159,7 +159,8 @@ object ViralityRunner extends App {
       withColumn("size",col("duration")+lit(1)).
       select("cascade","size")
 
-    for (i <- lowestBound to highestBound by increment) {
+//    for (i <- lowestBound to highestBound by increment) {
+    for (i <- lowestBound to 50 by increment) {
       a = i
 
       val partition = filteredPosts.filter($"timestamp" <= i)
@@ -169,13 +170,14 @@ object ViralityRunner extends App {
       viralityEvolution = viralityEvolution.join(result,"cascade")
     }
 
-    if (a != highestBound) {
-      val partition = filteredPosts.filter($"timestamp" <= highestBound)
-      val result = viralityFormula(partition).
-        select("cascade", "virality").
-        withColumnRenamed("virality","virality_" + highestBound)
-      viralityEvolution = viralityEvolution.join(result,"cascade")
-    }
+
+//    if (a != highestBound) {
+//      val partition = filteredPosts.filter($"timestamp" <= highestBound)
+//      val result = viralityFormula(partition).
+//        select("cascade", "virality").
+//        withColumnRenamed("virality","virality_" + highestBound)
+//      viralityEvolution = viralityEvolution.join(result,"cascade")
+//    }
 
     val cascadeHate = filterFirstPost(dataset)
 
