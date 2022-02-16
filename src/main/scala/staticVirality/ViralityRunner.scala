@@ -142,14 +142,14 @@ object ViralityRunner extends App {
    *
    */
   def incrementalWindowExecution(bounds: (Int,Int), increment: Int, dataset: DataFrame): DataFrame = {
-    val lowerBound = bounds._1
-    val higherBound = bounds._2
+    val lowestBound = bounds._1
+    val highestBound = bounds._2
 
     val cascadesTimestamp = dataset.groupBy("cascade").agg(
       max("timestamp").as("duration"))
 
     val cascadesFiltered = cascadesTimestamp
-      .filter($"duration" <= higherBound && $"duration" >= lowerBound)
+      .filter($"duration" <= highestBound && $"duration" >= lowestBound)
 
     val filteredPosts = dataset.join(cascadesFiltered,"cascade")
 
@@ -157,7 +157,7 @@ object ViralityRunner extends App {
 
     var viralityEvolution: DataFrame = cascadesFiltered.select("cascade")
 
-    for (i <- lowerBound to higherBound by increment) {
+    for (i <- lowestBound to highestBound by increment) {
       a = i
 
       val partition = filteredPosts.filter($"timestamp" <= i)
@@ -167,11 +167,11 @@ object ViralityRunner extends App {
       viralityEvolution = viralityEvolution.join(result,"cascade")
     }
 
-    if (a != higherBound) {
-      val partition = filteredPosts.filter($"timestamp" <= higherBound)
+    if (a != highestBound) {
+      val partition = filteredPosts.filter($"timestamp" <= highestBound)
       val result = viralityFormula(partition).
         select("cascade", "virality").
-        withColumnRenamed("virality","virality_" + higherBound)
+        withColumnRenamed("virality","virality_" + highestBound)
       viralityEvolution = viralityEvolution.join(result,"cascade")
     }
 
