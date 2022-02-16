@@ -148,7 +148,7 @@ object ViralityRunner extends App {
     val cascadesTimestamp = dataset.groupBy("cascade").agg(
       max("timestamp").as("duration"))
 
-    val cascadesFiltered = cascadesTimestamp
+    var cascadesFiltered = cascadesTimestamp
       .filter($"duration" <= highestBound && $"duration" >= lowestBound)
 
     val filteredPosts = dataset.join(cascadesFiltered,"cascade")
@@ -164,7 +164,7 @@ object ViralityRunner extends App {
       val result = viralityFormula(partition).
         select("cascade", "virality").
         withColumnRenamed("virality","virality_"+i)
-      viralityEvolution = viralityEvolution.join(result,"cascade")
+      cascadesFiltered = cascadesFiltered.join(result,"cascade")
     }
 
     if (a != highestBound) {
@@ -172,14 +172,14 @@ object ViralityRunner extends App {
       val result = viralityFormula(partition).
         select("cascade", "virality").
         withColumnRenamed("virality","virality_" + highestBound)
-      viralityEvolution = viralityEvolution.join(result,"cascade")
+      cascadesFiltered = cascadesFiltered.join(result,"cascade")
     }
 
     val cascadeHate = filterFirstPost(dataset)
 
-    viralityEvolution = viralityEvolution.join(cascadeHate,"cascade")
+    cascadesFiltered = cascadesFiltered.join(cascadeHate,"cascade")
 
-    viralityEvolution
+    cascadesFiltered
   }
 
   //----------------------------------------------------------------------------------------------------
@@ -229,6 +229,6 @@ object ViralityRunner extends App {
 //  writeResults(nonHatefulResult,
 //    "/home/rcalzada/output/generations_8_nt/non-hateful","csv")
     writeResults(dynamicResult,
-      "/home/rcalzada/output/dynamicResults/virality_ev_0_10_4","csv")
+      "/home/rcalzada/output/dynamicResults/duration","csv")
 }
 
