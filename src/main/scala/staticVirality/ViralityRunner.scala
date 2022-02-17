@@ -158,7 +158,7 @@ object ViralityRunner extends App {
 //    var viralityEvolution: DataFrame = cascadesFiltered.
 //      withColumn("size",col("duration")+lit(1)).
 //      select("cascade","size")
-    var viralityEvolution: DataFrame = cascadesFiltered.select("cascade","size")
+    var viralityEvolution: DataFrame = cascadesFiltered.select("cascade")
 
     for (i <- lowestBound to highestBound by increment) {
 //    for (i <- lowestBound to 4 by increment) {
