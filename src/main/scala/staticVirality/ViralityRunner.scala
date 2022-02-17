@@ -155,10 +155,10 @@ object ViralityRunner extends App {
 
     var a: Int = 0;
 
-//    var viralityEvolution: DataFrame = cascadesFiltered.
-//      withColumn("size",col("duration")+lit(1)).
-//      select("cascade","size")
-    var viralityEvolution: DataFrame = cascadesFiltered.select("cascade")
+    var viralityEvolution: DataFrame = cascadesFiltered.
+      withColumn("size",col("duration")+lit(1)).
+      select("cascade","size")
+//    var viralityEvolution: DataFrame = cascadesFiltered.select("cascade")
 
     for (i <- lowestBound to highestBound by increment) {
 //    for (i <- lowestBound to 4 by increment) {
@@ -170,7 +170,6 @@ object ViralityRunner extends App {
         withColumnRenamed("virality","virality_"+i)
       viralityEvolution = viralityEvolution.join(result,"cascade")
     }
-
 
     if (a != highestBound) {
       val partition = filteredPosts.filter($"timestamp" <= highestBound)
