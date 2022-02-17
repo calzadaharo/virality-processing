@@ -184,7 +184,7 @@ object ViralityRunner extends App {
 
     viralityEvolution = viralityEvolution.join(cascadeHate,"cascade")
 
-    println(viralityEvolution)
+    viralityEvolution.show
     viralityEvolution
   }
 
