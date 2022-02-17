@@ -233,6 +233,6 @@ object ViralityRunner extends App {
 //  writeResults(nonHatefulResult,
 //    "/home/rcalzada/output/generations_8_nt/non-hateful","csv")
     writeResults(dynamicResult,
-      "/home/rcalzada/output/dynamicResults/whole_until_4_inc_1","csv")
+      "/home/rcalzada/output/dynamicResults/to_10_until_4_inc_1","csv")
 }
 
