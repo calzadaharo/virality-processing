@@ -209,7 +209,7 @@ object ViralityRunner extends App {
   //----------------------------------------------------------------------------------------------------
 
   val dataset = this.getDynamicData(
-    "/home/rcalzada/static/DTfO/DepthTimestampFromOriginal_1644499864973")
+    "hdfs://com31.dit.upm.es:9000/data/rcalzada/results/raphtory/DepthTimestampFromOriginal_static")
 //  val dataset = this.getData(
 //    "/home/rcalzada/static/DepthFromOriginal_1642673382044")
 
