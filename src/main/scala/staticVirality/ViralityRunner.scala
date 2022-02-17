@@ -5,7 +5,7 @@ import org.apache.spark.sql.functions._
 object ViralityRunner extends App {
   val spark : SparkSession = SparkSession.builder
     .appName("Data ingestion")
-    .master("local[*]")
+    .master("spark://com31:7077")
     .getOrCreate();
 
   import spark.implicits._
