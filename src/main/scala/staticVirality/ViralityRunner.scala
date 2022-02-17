@@ -184,6 +184,7 @@ object ViralityRunner extends App {
 
     viralityEvolution = viralityEvolution.join(cascadeHate,"cascade")
 
+    println(viralityEvolution)
     viralityEvolution
   }
 
@@ -233,7 +234,7 @@ object ViralityRunner extends App {
 //    "/home/rcalzada/output/generations_8_nt/hateful","csv")
 //  writeResults(nonHatefulResult,
 //    "/home/rcalzada/output/generations_8_nt/non-hateful","csv")
-    writeResults(dynamicResult,
-      "/home/rcalzada/output/dynamicResults/(2,6)_4","csv")
+//    writeResults(dynamicResult,
+//      "/home/rcalzada/output/dynamicResults/(2,6)_4","csv")
 }
 
