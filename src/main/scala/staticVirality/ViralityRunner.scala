@@ -240,7 +240,7 @@ object ViralityRunner extends App {
 //  val nonHatefulResult = avgChildrenPerGen(dataset)._2
 
   //Dynamic
-
+  dataset.cache()
   val dynamicResult = incrementalWindowExecution((2,2692),1,dataset)
 
   // Save results in a file
