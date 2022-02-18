@@ -6,6 +6,7 @@ import com.typesafe.scalalogging.Logger
 object ViralityRunner extends App {
   val spark : SparkSession = SparkSession.builder
     .appName("Data ingestion")
+    .config("spark.executor.memory","6g")
     .master("spark://com31:7077")
     .getOrCreate();
 
