@@ -172,8 +172,12 @@ object ViralityRunner extends App {
       select("cascade","size")
 //    var viralityEvolution: DataFrame = cascadesFiltered.select("cascade")
 
+    logger.info("VIRALITY EVOLUTION OK")
+
     for (i <- lowestBound to highestBound by increment) {
 //    for (i <- lowestBound to 4 by increment) {
+
+      logger.info("Until " + i)
       a = i
 
       val partition = filteredPosts.filter($"timestamp" <= i)
