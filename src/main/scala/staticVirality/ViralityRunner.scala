@@ -45,6 +45,7 @@ object ViralityRunner extends App {
         col("_c4").as("depth").cast("Int"),
         col("_c5").as("timestamp").cast("Int"),
         col("_c6").as("hateful"))
+    logger.info("DATASET GENERATED")
     transformed
   }
 
