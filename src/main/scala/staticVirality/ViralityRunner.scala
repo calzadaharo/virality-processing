@@ -149,15 +149,21 @@ object ViralityRunner extends App {
     val lowestBound = bounds._1
     val highestBound = bounds._2
 
-    logger.info("From " + lowestBound + " to " + highestBound)
+    logger.info("FROM " + lowestBound + " TO " + highestBound)
 
     val cascadesTimestamp = dataset.groupBy("cascade").agg(
       max("timestamp").as("duration"))
 
+    logger.info("CASCADES TIMESTAMP OK")
+
     val cascadesFiltered = cascadesTimestamp
       .filter($"duration" <= highestBound && $"duration" >= lowestBound)
 
+    logger.info("CASCADES FILTERED OK")
+
     val filteredPosts = dataset.join(cascadesFiltered,"cascade")
+
+    logger.info("FILTERED POSTS OK")
 
     var a: Int = 0;
 
