@@ -1,6 +1,7 @@
 package staticVirality
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.functions._
+import com.typesafe.scalalogging.Logger
 
 object ViralityRunner extends App {
   val spark : SparkSession = SparkSession.builder
@@ -9,6 +10,8 @@ object ViralityRunner extends App {
     .getOrCreate();
 
   import spark.implicits._
+
+  val logger = Logger("Root")
 
   //----------------------------------------------------------------------------------------------------
   //----------------------------------------------------------------------------------------------------
@@ -144,6 +147,8 @@ object ViralityRunner extends App {
   def incrementalWindowExecution(bounds: (Int,Int), increment: Int, dataset: DataFrame): DataFrame = {
     val lowestBound = bounds._1
     val highestBound = bounds._2
+
+    logger.info("From " + lowestBound + " to " + highestBound)
 
     val cascadesTimestamp = dataset.groupBy("cascade").agg(
       max("timestamp").as("duration"))
