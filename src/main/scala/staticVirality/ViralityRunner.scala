@@ -282,7 +282,7 @@ object ViralityRunner extends App {
 
   //Dynamic
   dataset.cache()
-  val dynamicResult = incrementalWindowExecution((2,2692),1,dataset)
+  val dynamicResult = incrementalWindowExecution((2,100),1,dataset)
 
   // Save results in a file
 
