@@ -2,6 +2,7 @@ package staticVirality
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.functions._
 import com.typesafe.scalalogging.Logger
+import Array._
 
 object ViralityRunner extends App {
   val spark : SparkSession = SparkSession.builder
@@ -100,6 +101,33 @@ object ViralityRunner extends App {
   }
 
   /**
+   * Generates the dataframe with original virality formula: The one that appears in Goel et all paper
+   *
+   */
+  def viralityDynamicFormula(dataset: DataFrame, counting: DataFrame): DataFrame = {
+
+    // Calculates sum of the series 0 ... n
+    val zero2N = udf((n: Int) => n * (n + 1) / 2)
+
+    var sumTerms = dataset.withColumn("totalSum", zero2N('depth))
+
+    // Select the filter for the cascades
+    val hated = filterFirstPost(dataset)
+
+    // Generate the final dataset
+    val grouped = sumTerms.groupBy("cascade")
+    var previous = grouped.agg(sum("explosion") as "totalSum")
+    previous = previous.join(counting,"cascade")
+    previous = previous.join(hated,"cascade")
+
+    val viralityResult = previous.withColumn("virality",
+      (lit(1)/(col("count")*(col("count")-lit(1))))
+        *col("totalSum"))
+
+    viralityResult
+  }
+
+  /**
    * Effective Branching Number. Average number of children per generation
    *
    */
@@ -174,18 +202,32 @@ object ViralityRunner extends App {
 
     logger.info("VIRALITY EVOLUTION OK")
 
-    for (i <- lowestBound to highestBound by increment) {
-//    for (i <- lowestBound to 4 by increment) {
+    val counting = viralityEvolution.groupBy("cascade").count
 
-      logger.info("Until " + i)
-      a = i
+    val values = range(lowestBound,highestBound+1,increment)
 
-      val partition = filteredPosts.filter($"timestamp" <= i)
-      val result = viralityFormula(partition).
+    values.foreach(value => {
+      a = value
+
+      val partition = filteredPosts.filter($"timestamp" <= value)
+      val result = viralityDynamicFormula(partition,counting).
         select("cascade", "virality").
-        withColumnRenamed("virality","virality_"+i)
+        withColumnRenamed("virality","virality_"+value)
       viralityEvolution = viralityEvolution.join(result,"cascade")
-    }
+    })
+
+//    for (i <- lowestBound to highestBound by increment) {
+////    for (i <- lowestBound to 4 by increment) {
+//
+//      logger.info("Until " + i)
+//      a = i
+//
+//      val partition = filteredPosts.filter($"timestamp" <= i)
+//      val result = viralityDynamicFormula(partition,counting).
+//        select("cascade", "virality").
+//        withColumnRenamed("virality","virality_"+i)
+//      viralityEvolution = viralityEvolution.join(result,"cascade")
+//    }
 
     if (a != highestBound) {
       val partition = filteredPosts.filter($"timestamp" <= highestBound)
