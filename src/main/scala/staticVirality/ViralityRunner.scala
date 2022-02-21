@@ -116,7 +116,7 @@ object ViralityRunner extends App {
 
     // Generate the final dataset
     val grouped = sumTerms.groupBy("cascade")
-    var previous = grouped.agg(sum("explosion") as "totalSum")
+    var previous = grouped.agg(sum("totalSum") as "totalSum")
     previous = previous.join(counting,"cascade")
     previous = previous.join(hated,"cascade")
 
