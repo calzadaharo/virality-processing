@@ -185,7 +185,6 @@ object ViralityRunner extends App {
         select("cascade", "virality").
         withColumnRenamed("virality","virality_"+i)
       viralityEvolution = viralityEvolution.join(result,"cascade")
-      logger.info(s"COUNT: ${viralityEvolution.count()}")
     }
 
     if (a != highestBound) {
@@ -241,7 +240,7 @@ object ViralityRunner extends App {
 
   //Dynamic
   dataset.cache()
-  val dynamicResult = incrementalWindowExecution((2,2692),1,dataset)
+  val dynamicResult = incrementalWindowExecution((2,5),1,dataset)
 
   // Save results in a file
 
