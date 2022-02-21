@@ -185,6 +185,7 @@ object ViralityRunner extends App {
         select("cascade", "virality").
         withColumnRenamed("virality","virality_"+i)
       viralityEvolution = viralityEvolution.join(result,"cascade")
+      logger.info(s"COUNT: ${viralityEvolution.count()}")
     }
 
     if (a != highestBound) {
