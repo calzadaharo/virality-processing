@@ -6,8 +6,6 @@ import com.typesafe.scalalogging.Logger
 object ViralityRunner extends App {
   val spark : SparkSession = SparkSession.builder
     .appName("Virality")
-    .config("spark.executor.memory","6g")
-    .master("spark://com31:7077")
     .getOrCreate();
 
   import spark.implicits._
@@ -161,6 +159,7 @@ object ViralityRunner extends App {
       .filter($"duration" <= highestBound && $"duration" >= lowestBound)
 
     logger.info("CASCADES FILTERED OK")
+    logger.info(s"Count:  ${cascadesFiltered.count()}")
 
     val filteredPosts = dataset.join(cascadesFiltered,"cascade")
 
