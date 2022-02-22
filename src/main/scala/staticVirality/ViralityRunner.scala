@@ -283,7 +283,7 @@ object ViralityRunner extends App {
 
   //Dynamic
   dataset.cache()
-  val dynamicResult = incrementalWindowExecution((2,9),1,dataset)
+  val dynamicResult = incrementalWindowExecution((2,8),1,dataset)
 
   // Save results in a file
 
@@ -293,7 +293,7 @@ object ViralityRunner extends App {
 //  writeResults(nonHatefulResult,
 //    "/home/rcalzada/output/generations_8_nt/non-hateful","csv")
     writeResults(dynamicResult,
-      "hdfs://com31.dit.upm.es:9000/data/rcalzada/results/9_inc_1","csv")
+      "hdfs://com31.dit.upm.es:9000/data/rcalzada/results/8_inc_1","csv")
 //    writeResults(dynamicResult,
 //      "hdfs://com31.dit.upm.es:9000/data/rcalzada/results/test","csv")
 
