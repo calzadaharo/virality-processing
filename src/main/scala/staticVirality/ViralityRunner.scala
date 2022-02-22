@@ -208,6 +208,7 @@ object ViralityRunner extends App {
 
     values.foreach(value => {
       a = value
+      logger.info(s"Until ${value}")
 
       val partition = filteredPosts.filter($"timestamp" <= value)
       val result = viralityDynamicFormula(partition,counting).
@@ -292,7 +293,7 @@ object ViralityRunner extends App {
 //  writeResults(nonHatefulResult,
 //    "/home/rcalzada/output/generations_8_nt/non-hateful","csv")
     writeResults(dynamicResult,
-      "hdfs://com31.dit.upm.es:9000/data/rcalzada/results/whole_inc_1","csv")
+      "hdfs://com31.dit.upm.es:9000/data/rcalzada/results/100_inc_1","csv")
 //    writeResults(dynamicResult,
 //      "hdfs://com31.dit.upm.es:9000/data/rcalzada/results/test","csv")
 
