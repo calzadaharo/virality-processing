@@ -176,7 +176,7 @@ object ViralityRunner extends App {
     val lowestBound = bounds._1
     val highestBound = bounds._2
 
-    logger.info("FROM " + lowestBound + " TO " + highestBound)
+    logger.info(s"FROM ${lowestBound} TO ${highestBound}")
 
     val cascadesTimestamp = dataset.groupBy("cascade").agg(
       max("timestamp").as("duration"))
@@ -258,7 +258,7 @@ object ViralityRunner extends App {
     case "csv" =>
       dataFrame.write.csv(path)
     case _ =>
-      println("INCORRECT FORMAT")
+      logger.error("INCORRECT FORMAT")
   }
 
   //----------------------------------------------------------------------------------------------------
