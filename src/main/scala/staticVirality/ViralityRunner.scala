@@ -202,7 +202,7 @@ object ViralityRunner extends App {
 
     logger.info("VIRALITY EVOLUTION OK")
 
-    val counting = viralityEvolution.groupBy("cascade").count.cache()
+    val counting = filteredPosts.groupBy("cascade").count.cache()
 
     val values = range(lowestBound,highestBound+1,increment)
 
