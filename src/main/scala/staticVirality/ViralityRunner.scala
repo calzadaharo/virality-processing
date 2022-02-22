@@ -197,12 +197,12 @@ object ViralityRunner extends App {
 
     var viralityEvolution: DataFrame = cascadesFiltered.
       withColumn("size",col("duration")+lit(1)).
-      select("cascade","size")
+      select("cascade","size").cache()
 //    var viralityEvolution: DataFrame = cascadesFiltered.select("cascade")
 
     logger.info("VIRALITY EVOLUTION OK")
 
-    val counting = viralityEvolution.groupBy("cascade").count
+    val counting = viralityEvolution.groupBy("cascade").count.cache()
 
     val values = range(lowestBound,highestBound+1,increment)
 
@@ -214,7 +214,7 @@ object ViralityRunner extends App {
       val result = viralityDynamicFormula(partition,counting).
         select("cascade", "virality").
         withColumnRenamed("virality","virality_"+value)
-      viralityEvolution = viralityEvolution.join(result,"cascade")
+      viralityEvolution = viralityEvolution.join(result,"cascade").cache()
     })
 
 //    for (i <- lowestBound to highestBound by increment) {
