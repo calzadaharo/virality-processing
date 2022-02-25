@@ -3,6 +3,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.functions._
 import com.typesafe.scalalogging.Logger
 import Array._
+import org.apache.spark.sql.expressions.Window
 
 object ViralityRunner extends App {
   val spark : SparkSession = SparkSession.builder
@@ -246,6 +247,15 @@ object ViralityRunner extends App {
     viralityEvolution
   }
 
+  def efficientViralityEvolution(dataset: DataFrame): DataFrame = {
+    val sum2n = udf((n:Int) =>n*(n+1)/2)
+    val w = Window.partitionBy('cascade).orderBy('timestamp)
+    val result = dataset.withColumn("d_sum", sum2n('depth)).
+      withColumn("d_cumsum", sum('d_sum) over w).
+      withColumn("virality", 'd_cumsum/(('t+1)*('t+2)))
+    result
+  }
+
   //----------------------------------------------------------------------------------------------------
   //----------------------------------------------------------------------------------------------------
   // SAVE RESULTS SECTION
@@ -283,7 +293,7 @@ object ViralityRunner extends App {
 
   //Dynamic
   dataset.cache()
-  val dynamicResult = incrementalWindowExecution((1,10),1,dataset)
+  val dynamicResult = efficientViralityEvolution(dataset)
 
   // Save results in a file
 
@@ -293,7 +303,7 @@ object ViralityRunner extends App {
 //  writeResults(nonHatefulResult,
 //    "/home/rcalzada/output/generations_8_nt/non-hateful","csv")
     writeResults(dynamicResult,
-      "hdfs://com31.dit.upm.es:9000/data/rcalzada/results/10_inc_1_TEST","csv")
+      "hdfs://com31.dit.upm.es:9000/data/rcalzada/results/wholeViralityEvolution","csv")
 //    writeResults(dynamicResult,
 //      "hdfs://com31.dit.upm.es:9000/data/rcalzada/results/test","csv")
 
