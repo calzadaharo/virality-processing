@@ -252,7 +252,7 @@ object ViralityRunner extends App {
     val w = Window.partitionBy('cascade).orderBy('timestamp)
     val result = dataset.withColumn("d_sum", sum2n('depth)).
       withColumn("d_cumsum", sum('d_sum) over w).
-      withColumn("virality", 'd_cumsum/(('timestamp+1)*('timestamp+2)))
+      withColumn("virality", 'd_cumsum/(('timestamp+1)*('timestamp)))
     result
   }
 
